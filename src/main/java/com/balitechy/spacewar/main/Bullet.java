@@ -1,7 +1,6 @@
 package com.balitechy.spacewar.main;
 
 import java.awt.Graphics;
-import java.awt.image.BufferedImage;
 
 public class Bullet {
 	
@@ -9,12 +8,12 @@ public class Bullet {
 	private double y;
 	public static final int WIDTH = 11;
 	public static final int HEIGHT = 21;
-	private BufferedImage image;
+	private BulletRenderer renderer; 
 	
-	public Bullet(double x, double y, Game game){
+	public Bullet(double x, double y, BulletRenderer renderer){
 		this.x = x;
 		this.y = y;
-		image = game.getSprites().getImage(35, 52, WIDTH, HEIGHT);
+		this.renderer = renderer;
 	}
 	
 	public void tick(){
@@ -22,9 +21,13 @@ public class Bullet {
 	}
 	
 	public void render(Graphics g){
-		g.drawImage(image, (int) x, (int) y, null);
+		renderer.render(this, g);
 	}
 	
+	public double getX() {
+		return x;
+	}
+
 	public double getY(){
 		return y;
 	}

@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 
 import javax.swing.JFrame;
 
@@ -20,12 +18,9 @@ public class Game extends Canvas implements Runnable {
 	
 	private boolean running = false;
 	private Thread thread;
-	private BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-	
-	
-	private SpritesImageLoader sprites;
 	
 	//Game components
+	private StyleFactory factory;
 	private Player player;
 	private BulletController bullets;
 	private BackgroundRenderer backgRenderer;
@@ -34,14 +29,6 @@ public class Game extends Canvas implements Runnable {
 	public void init(){
 		requestFocus();
 		
-		
-		sprites = new SpritesImageLoader("/sprites.png");
-		try {			
-			sprites.loadImage();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
 		// Add keyboard listener
 		addKeyListener(new InputHandler(this));
 		
@@ -49,13 +36,15 @@ public class Game extends Canvas implements Runnable {
 		
 		
 		// Set player position at the bottom center.
-		player = new Player((WIDTH * SCALE - Player.WIDTH) / 2, HEIGHT * SCALE - 50 , this);
+		factory = new VectorialFactory();
+
+		player = factory.createPlayer((WIDTH * SCALE - Player.WIDTH) / 2, HEIGHT * SCALE - 50, this);
 		bullets = new BulletController();
-		backgRenderer=new BackgroundRenderer();
+		backgRenderer = factory.createBackground();
 	}
 
-	public SpritesImageLoader getSprites(){
-		return sprites;
+	public StyleFactory getFactory(){
+		return factory;
 	}
 	
 	public BulletController getBullets(){
@@ -189,17 +178,9 @@ public class Game extends Canvas implements Runnable {
 		Graphics g = bs.getDrawGraphics();
 		/////////////////////////////////
 		
-		try {
-			backgRenderer.render(g, this);
-			player.render(g);
-			bullets.render(g);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		
-		
+		backgRenderer.render(g, this);
+		player.render(g);
+		bullets.render(g);
 		
 		////////////////////////////////
 		g.dispose();
