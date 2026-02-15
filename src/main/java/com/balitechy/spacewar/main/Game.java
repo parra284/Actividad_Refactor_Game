@@ -36,7 +36,7 @@ public class Game extends Canvas implements Runnable {
 		
 		
 		// Set player position at the bottom center.
-		factory = new VectorialFactory();
+		factory = new SpritesFactory();
 
 		player = factory.createPlayer((WIDTH * SCALE - Player.WIDTH) / 2, HEIGHT * SCALE - 50, this);
 		bullets = new BulletController();
