@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
+import java.util.Scanner;
 
 import javax.swing.JFrame;
 
@@ -21,6 +22,11 @@ public class Game extends Canvas implements Runnable {
 	
 	//Game components
 	private StyleFactory factory;
+
+	public Game(StyleFactory factory){
+		this.factory = factory;
+	}
+
 	private Player player;
 	private BulletController bullets;
 	private BackgroundRenderer backgRenderer;
@@ -36,8 +42,6 @@ public class Game extends Canvas implements Runnable {
 		
 		
 		// Set player position at the bottom center.
-		factory = new SpritesFactory();
-
 		player = factory.createPlayer((WIDTH * SCALE - Player.WIDTH) / 2, HEIGHT * SCALE - 50, this);
 		bullets = new BulletController();
 		backgRenderer = factory.createBackground();
@@ -187,8 +191,34 @@ public class Game extends Canvas implements Runnable {
 		bs.show();
 	}
 	
-	public static void main(String args[]){		
-		Game game = new Game();
+	public static void main(String args[]){
+    
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Seleccione el estilo gráfico:");
+		System.out.println("1. Sprites");
+		System.out.println("2. Vectorial");
+		System.out.println("3. Colorful");
+		
+		int opcion = sc.nextInt();
+		
+		StyleFactory factory;
+		
+		switch(opcion){
+			case 1:
+				factory = new SpritesFactory();
+				break;
+			case 2:
+				factory = new VectorialFactory();
+				break;
+			case 3:
+				factory = new ColorfulFactory();
+				break;
+			default:
+				System.out.println("Opción inválida. Usando Sprites por defecto.");
+				factory = new SpritesFactory();
+		}
+		
+		Game game = new Game(factory);
 		game.setPreferredSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		game.setMaximumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
 		game.setMinimumSize(new Dimension(WIDTH * SCALE, HEIGHT * SCALE));
